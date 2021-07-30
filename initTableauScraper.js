@@ -52,6 +52,7 @@ async function initTableauScraper(queries,count){
     async function getPublicAPIres(query,params){
         let {count,start} = params;
         let url = `https://public.tableau.com/api/search/query?query=${query}&count=${count}&start=${start}&type=authors`;
+console.log(url);
         let d = await handleFetch(url,{},'json');
         return d;
     }
@@ -59,22 +60,24 @@ async function initTableauScraper(queries,count){
     async function loopThroughSearch(query,count){
         let d = await getPublicAPIres(query,{count:count,start:0});
         console.log(d);
+        contain_arr.push(d.results);
         var results_total = d?.totalHits;
         for(let i=count; i<results_total; i=i+count){
             let r = await getPublicAPIres(query,{count:count,start:i});
             await delay(rando(666)+333);
-            contain_arr.push(results);
+            contain_arr.push(r.results);
         }
         console.log(`${query} complete`);
         return true;
     }
-    async function loopThroughQueries(queries){
-        for(query in querires){
+    async function loopThroughQueries(queries,count){
+        for(query in queries){
+            console.log(query);
             await loopThroughSearch(query,count);
         }
-        downloadr(contain_arr,`tableau dump.json`);
+        downloadr(contain_arr.flat(),`tableau dump.json`);
     }
-
+loopThroughQueries(queries,count)
 }
 var contain_arr = [];
 initTableauScraper(['ryan','robert'],100)
