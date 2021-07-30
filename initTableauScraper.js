@@ -71,9 +71,9 @@ console.log(url);
         return true;
     }
     async function loopThroughQueries(queries,count){
-        for(query in queries){
-            console.log(query);
-            await loopThroughSearch(query,count);
+        for(let i=0; i<queries.length; i++){
+            console.log(queries[i]);
+            await loopThroughSearch(queries[i],count);
         }
         downloadr(contain_arr.flat(),`tableau dump.json`);
     }
